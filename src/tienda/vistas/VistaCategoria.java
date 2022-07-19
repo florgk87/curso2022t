@@ -28,7 +28,8 @@ public class VistaCategoria {
 	
 	JButton aceptar_button;
 	JButton cancelar_button;
-	
+
+//prueba modificacion git	
 	
 	
 	public VistaCategoria() {
