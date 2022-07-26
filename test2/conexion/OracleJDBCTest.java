@@ -33,7 +33,7 @@ class OracleJDBCTest {
 		ojdbc = OracleJDBC.getInstance();
 		
 		INSERT_1 = "INSERT INTO COUNTRIES VALUES ( '"+ CLAVE_1 + "','" + TEXTO_1 + "'," + REGION_1 + ")";
-		int filas = ojdbc.ejecutar("DELETE COUNTRIES WHERE COUNTRY_ID LIKE '%_' ");
+		int filas = ojdbc.ejecutar("DELETE COUNTRIES WHERE COUNTRY_ID LIKE '@_' ");
 	
 	// prueba elimino Canada: CA	Canada	2
 	}

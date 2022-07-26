@@ -13,8 +13,8 @@ public class OracleJDBC{
 	
 	private static final String JDBC_DRIVER = "oracle.jdbc.driver.OracleDriver";
 	private final String URL = "jdbc:oracle:thin:@localhost:1521:xe";
-	private final String USUARIO = "hr";
-	private final String PASSWORD = "hr";
+	private final String USUARIO = "alumno";
+	private final String PASSWORD = "Curso2022";
 	private final String SQL_USE = "USE";
 	private final String SQL_CREATE = "CREATE DATABASE";
 
@@ -127,8 +127,7 @@ public int consigueClave(String tabla, String campo) throws Exception {
 			System.out.println("Tiene datos");
 		else
 			return 1;
-		return rs.getInt(0) ; // falta devolver algo mas
-		
+		return rs.getInt(0) + 1 ; 
 	}catch (SQLException e) {
 		e.printStackTrace();
 		throw new Exception("Error buscando PK : " + sql);
@@ -138,9 +137,17 @@ public int consigueClave(String tabla, String campo) throws Exception {
 
 
 
-public void closeConnection() throws SQLException {
-	conn.close();
-	
+public void closeConnection() throws Exception {
+	try {
+		if (conn != null && !conn.isClosed()) {
+			conn.close();
+		}
+	} catch (Exception e) {
+		System.out.println("No se ha podido cerrar la conexión a la BD");
+		throw new Exception("Error al cerrar conexión a BD");
+	} finally {
+		conn = null;
+	}
 }
 }
 
