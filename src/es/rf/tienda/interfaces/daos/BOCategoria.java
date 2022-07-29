@@ -11,7 +11,7 @@ import es.rf.tienda.util.Rutinas;
 public class BOCategoria extends CategoriaDAO<Categoria> {
 	  
 	public BOCategoria() {
-		super(new Categoria());
+		super(new Categoria(null, null));
 	}
 	
 	public String obtenLista(Categoria clase, String separador) {
@@ -56,7 +56,6 @@ public class BOCategoria extends CategoriaDAO<Categoria> {
 	}
 	
 			
-	@Override
 	public list<Categoria> leerSQL(String where) throws DAOException, DomainException {
 		String sql = SELECT + "WHERE" + where;
 		return montarLista(sql);

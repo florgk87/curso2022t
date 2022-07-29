@@ -11,8 +11,14 @@ import es.rf.tienda.util.Validator;
  * @version		13 de abr. de 2016
  *
  */
-public class Categoria {
+public class Categoria extends Modelo{
 	
+	public Categoria(String tabla, String pk) {
+		super(tabla, pk);
+		
+	}
+
+
 	private int id_categoria;			//identificador categoria
 	
 	private String cat_nombre;			//nombre de la categoria
@@ -24,7 +30,6 @@ public class Categoria {
 	public static final int CAT_NOMBRE_LONG_MIN = 5;
 	public static final int CAT_DESCRIPCION_LONG_MAX = 200;
 	
-	public Categoria(){}
 	
 	
 	public boolean isValid(){	
@@ -46,8 +51,8 @@ public class Categoria {
 	 * Setter para identificador de categoria
 	 * 
 	 */
-	public void setId_categoria(int id_categoria) {
-		this.id_categoria = id_categoria;
+	public void setId_categoria(int id) {
+		setId_categoria(id);
 	}
 	
 	/**
@@ -68,6 +73,7 @@ public class Categoria {
 		if (Validator.isAlfanumeric(cat_nombre))
 				this.cat_nombre = cat_nombre;
 			else	
+		// Corregir para dar un error por pantalla		
 				throw new DomainException(ErrorMessages.mensajes(ErrorMessages.PROERR_004, 
 						new String[] { "Nombre Categoría", "Alfanumérico"  }));
 								
@@ -135,6 +141,37 @@ public class Categoria {
 	public String toString() {
 		return "Categoria [id_categoria=" + id_categoria + ", cat_nombre=" + cat_nombre + ", cat_descripcion="
 				+ cat_descripcion + "]";
+	}
+
+
+
+
+	@Override
+	public String[] toArray() {
+		return new String[] {getId_categoria() + "", getCat_nombre(), getCat_descripcion()};
+	}
+
+
+	@Override
+	public Categoria clean() {
+		id_categoria=0;
+		cat_nombre=null;
+		cat_descripcion=null;
+		return this;
+	}
+
+
+	@Override
+	public int getId() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public void setId(int id) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

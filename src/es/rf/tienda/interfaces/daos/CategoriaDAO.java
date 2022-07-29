@@ -32,7 +32,7 @@ public abstract class CategoriaDAO<Categoria> implements ICategoria {
 	}
 	
 	public list<Categoria> leerRegistros() throws DAOException, DomainException {
-		string where = obtenerWhere(clase);
+		String where = obtenerWhere(clase);
 		String sql = SELECT + where;
 		return montarLista(sql);
 		
@@ -80,7 +80,8 @@ public abstract class CategoriaDAO<Categoria> implements ICategoria {
 		String update = obtenUpdate(clase);
 		String sql = UPDATE + update + where;
 		return RFDataConnection.ejecutar(sql) >1;
-		
+	}
+	
 	
 	
 	
