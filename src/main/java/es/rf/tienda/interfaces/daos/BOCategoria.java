@@ -8,10 +8,10 @@ import es.rf.tienda.exception.DAOException;
 import es.rf.tienda.exception.DomainException;
 import es.rf.tienda.util.Rutinas;
 
-public class BOCategoria extends CategoriaDAO<Categoria> {
+public class BOCategoria extends CategoriaDAO {
 	  
 	public BOCategoria() {
-		super(new Categoria());
+		super();
 	}
 	
 	public String obtenLista(Categoria clase, String separador) {
@@ -21,8 +21,8 @@ public class BOCategoria extends CategoriaDAO<Categoria> {
 			salida = Rutinas.addCampo(salida, "id_Categoria", clase.getId_categoria(), separador);
 			
 		}
-		if ((clase.getCat_nombre() != null && clase.getCat_nombre().compareTo("") !=0) || separador.equals(",")) {
-			salida = Rutinas.addCampo(salida, "cat_nombre", clase.getCat_nombre(), separador);
+		if ((clase.getCat_nombre(separador) != null && clase.getCat_nombre(salida).compareTo("") !=0) || separador.equals(",")) {
+			salida = Rutinas.addCampo(salida, "cat_nombre", clase.getCat_nombre(salida), separador);
 						
 		}		
 		if ((clase.getCat_descripcion() != null && clase.getCat_descripcion().compareTo("") !=0) || separador.equals(",")) {
@@ -36,7 +36,7 @@ public class BOCategoria extends CategoriaDAO<Categoria> {
 	public String obtenInsert(Categoria clase) {
 		String salida = "";
 		salida = Rutinas.addCampo(salida, "id_Categoria", clase.getId_categoria(), ",");
-		salida = Rutinas.addCampo(salida, "cat_nombre", clase.getCat_nombre(), ",");		
+		salida = Rutinas.addCampo(salida, "cat_nombre", clase.getCat_nombre(salida), ",");		
 		salida = Rutinas.addCampo(salida, "cat_descripcion", clase.getCat_descripcion(), ",");
 		return salida;
 	}
@@ -49,35 +49,11 @@ public class BOCategoria extends CategoriaDAO<Categoria> {
 			salida.setCat_descripcion(rs.getString("Cat_descripcion"));
 			
 		}catch (SQLException e) {
-			throw new DAOException("Error " + e.getMessage() + "\nen montarRegistro" );
+			throw new DAOException( );
 		}
 		return salida;
 	
 	}
 	
-			
-	@Override
-	public list<Categoria> leerSQL(String where) throws DAOException, DomainException {
-		String sql = SELECT + "WHERE" + where;
-		return montarLista(sql);
-	}
-	
-	@Override
-	public boolean borra(Categoria clase) throws DAOException {
-		String where  = obtenWhere(clase);
-		String sql = DELETE+ where;
-		return RFDataConnection.ejecutar(sql) >0;
-	}
-	
-	private String obtenWhere(Categoria clase) {
-		String salida = obtenLista(clase, "AND");
-		if (salida.length()> 0)
-			salida = "WHERE " + salida;
-		return salida;
-	}
-	
-	private String obtenUpdate(Categoria clase) {
-		return obtenLista(clase,"");
-	}
 	
 }

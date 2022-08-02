@@ -54,9 +54,10 @@ public class Categoria {
 	
 	/**
 	 * Getter para el nombre de categoria
+	 * @param string 
 	 * @return cadena con el nombre de la categoria
 	 */
-	public String getCat_nombre() {
+	public String getCat_nombre(String string) {
 		return cat_nombre;
 	}
 	
@@ -143,6 +144,12 @@ public class Categoria {
 	public String getTabla() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	public void getCat_descripcion(String string) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
