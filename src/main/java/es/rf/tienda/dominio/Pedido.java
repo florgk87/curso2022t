@@ -12,6 +12,8 @@ public class Pedido {
 	private Double car_precio; //Precio linea de  pedido
 	private Direccion car_envio; //Datos de envio
 	private Direccion car_pago; //Datos de pago
+	// TODO: Do not store full card numbers — use a payment gateway or tokenization.
+	// At minimum store only the last 4 digits. CCV must never be persisted.
 	private String car_tarjeta; //Numero de la tarjeta de crédito/débito
 	private Calendar car_feCadud; //Fecha de caducidad de la tarjeta de crédito
 	private int car_ccv; //CCV de la tarjeta de crédito
