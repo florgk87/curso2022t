@@ -122,12 +122,20 @@ con rol cliente
 	
 	
 	public static String mensajes(String mensaje, String[] datos) {
+		if (mensaje == null) {
+			return "";
+		}
+		if (datos == null) {
+			return mensaje;
+		}
 		String salida="";
 		int contador=0;
 		for (int a=0;a <mensaje.length();a++) {
 			if (mensaje.charAt(a)=='?') {
-				if (contador<=datos.length)
+				if (contador < datos.length)
 					salida +=datos[contador++];
+				else
+					salida +='?';
 			}
 			else
 				salida +=mensaje.charAt(a);

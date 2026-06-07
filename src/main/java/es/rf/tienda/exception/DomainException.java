@@ -4,11 +4,11 @@ package es.rf.tienda.exception;
 public class DomainException extends Exception {
 
 	public DomainException(String mensajes) {
-		// TODO Auto-generated constructor stub
+		super(mensajes);
 	}
 
-	
-	
-	
+	public DomainException(String mensajes, Throwable cause) {
+		super(mensajes, cause);
+	}
 
 }

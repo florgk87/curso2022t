@@ -77,6 +77,9 @@ public class Validator {
 	 * 
 	 * **************************************************************************************/
 	public static boolean isAlfanumeric(String texto){
+		if (texto == null) {
+			return false;
+		}
 		Pattern pattern = Pattern.compile(ALFANUMERIC_PATTERN);
 		Matcher matcher = pattern.matcher(texto);
 				return matcher.matches();
@@ -115,6 +118,9 @@ public class Validator {
 	 * 
 	 * **************************************************************************************/
 	public static boolean cumplePhoneNumber(String phoneNumber){
+		if (phoneNumber == null) {
+			return false;
+		}
 		return phoneNumber.matches(PHONE_PATTERN) && phoneNumber.replace(" ", "").matches("\\d{,}");
 	}
 
@@ -371,6 +377,9 @@ public class Validator {
 	 * @return true si cumple con las especificaciones
 	 */
 	public static boolean esPasswordValida(String password){
+		if (password == null) {
+			return false;
+		}
 		Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
 		Matcher matcher = pattern.matcher(password);
 		return matcher.matches();

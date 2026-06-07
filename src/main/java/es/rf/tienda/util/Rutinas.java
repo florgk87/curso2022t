@@ -9,13 +9,17 @@ public class Rutinas {
 	private static final String DATE_PATTERN = "dd/MM/yyyy";
 	
 	
-	public static Calendar convierteACalendar(String fecha) {
+	public static Calendar convierteACalendar(String fecha) throws IllegalArgumentException {
+		if (fecha == null || fecha.isEmpty()) {
+			throw new IllegalArgumentException("La fecha no puede ser nula o vacia");
+		}
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		sdf.setLenient(false);
 		Calendar calendar = Calendar.getInstance();
 		try {
 			calendar.setTime(sdf.parse(fecha));
 		} catch (ParseException e) {
-			return null;
+			throw new IllegalArgumentException("Formato de fecha invalido: " + fecha, e);
 		}
 		return calendar;
 	}

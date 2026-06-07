@@ -23,16 +23,20 @@ public class CategoriaDAO {
 	private static final String INSERT = "INSERT INTO Categoria VALUES ";
 	private static final String DELETE = "DELETE FROM Categoria ";
 	
-	OracleJDBC odbc = new OracleJDBC();
+	OracleJDBC odbc;
+
+	public CategoriaDAO() throws DAOException {
+		odbc = new OracleJDBC();
+	}
 
 	
-	public List<Categoria>  leerTodos(Categoria cat) throws Exception {
+	public List<Categoria>  leerTodos(Categoria cat) throws DAOException {
 		String sql = SELECT;
 		return montarLista(sql);
 		
 	}
 	
-	public List<Categoria> leerRegistros(Categoria cat) throws Exception {
+	public List<Categoria> leerRegistros(Categoria cat) throws DAOException {
 		String where = obtenerWhere(null);
 		String sql = SELECT + where;
 		return montarLista(sql);
@@ -40,7 +44,7 @@ public class CategoriaDAO {
 	}
 	
 
-	public boolean guardar(Categoria cat) throws Exception {
+	public boolean guardar(Categoria cat) throws DAOException {
 		String salida = "";
 		
 		int clave = odbc.consigueClave("Categoria", "id_Categoria");
@@ -51,7 +55,7 @@ public class CategoriaDAO {
 		System.out.println(sql);
 		int ret = odbc.ejecutar(sql);
 		if (ret==0)
-			throw new DAOException();
+			throw new DAOException("No se inserto ningun registro en Categoria");
 		return true;
 	}
 	
@@ -59,9 +63,9 @@ public class CategoriaDAO {
  * Recibe un objeto Categoria y devuelve
  * @param cat
  * @return
- * @throws Exception
+ * @throws DAOException
  
-	public Categoria leer(Categoria cat) throws Exception {
+	public Categoria leer(Categoria cat) throws DAOException {
 		String where = obtenerWhere(null);
 		String sql = SELECT + where;
 		ResultSet rs = OracleJDBC.ejecutarQuery(sql);
@@ -70,10 +74,10 @@ public class CategoriaDAO {
 			if (rs.isLast()) {
 				return montarLista(rs);
 			} else
-				throw new DAOException();
+				throw new DAOException("Se esperaba un unico registro pero se encontraron multiples");
 			
 		} catch (SQLException e) {
-			throw new DAOException();
+			throw new DAOException("Error leyendo registro de Categoria", e);
 		}
 		
 	
@@ -83,7 +87,7 @@ public class CategoriaDAO {
 
 	
 
-	public boolean actualizar(Categoria cat) throws Exception {
+	public boolean actualizar(Categoria cat) throws DAOException {
 		String where = " WHERE ID_CATEGORIA = " + ((es.rf.tienda.dominio.Categoria) cat).getId_categoria();
 		int tmp = ((es.rf.tienda.dominio.Categoria) cat).getId_categoria();
 		((es.rf.tienda.dominio.Categoria) cat).setId_categoria(0);
@@ -119,7 +123,7 @@ public class CategoriaDAO {
 		return salida;
 	}
 	
-	public boolean borrarRegistro(Categoria cat) throws Exception{
+	public boolean borrarRegistro(Categoria cat) throws DAOException {
 		String where = obtenerWhere(cat);
 		String sql = DELETE + ((es.rf.tienda.dominio.Categoria) cat).getTabla() + where;
 		return odbc.ejecutar(sql) >0;
@@ -127,7 +131,7 @@ public class CategoriaDAO {
 
 	
 
-	private List<Categoria> montarLista(String sql) throws Exception {
+	private List<Categoria> montarLista(String sql) throws DAOException {
 		
 		ResultSet rs = OracleJDBC.ejecutarQuery(sql);
 		List<Categoria> lista = new ArrayList<Categoria>();
@@ -136,7 +140,7 @@ public class CategoriaDAO {
 				lista.add(montarRegistro(rs));
 			}
 		} catch (SQLException e) {
-			throw new DAOException();
+			throw new DAOException("Error montando lista de Categorias desde ResultSet", e);
 		}
 		return lista;
 		
@@ -147,15 +151,18 @@ public class CategoriaDAO {
 	 * 
 	 * @param rs
 	 * @return
-	 * @throws SQLException
+	 * @throws DAOException
 	 */
 	
-	private Categoria montarRegistro(ResultSet rs) throws SQLException {
-		// TODO Auto-generated method stub
+	private Categoria montarRegistro(ResultSet rs) throws DAOException {
 		Categoria cat = new Categoria();
-		cat.setId_categoria(rs.getInt("id_categoria"));
-		cat.getCat_nombre(rs.getString("cat_nombre"));
-		cat.getCat_descripcion(rs.getString("cat_descripcion"));
+		try {
+			cat.setId_categoria(rs.getInt("id_categoria"));
+			cat.getCat_nombre(rs.getString("cat_nombre"));
+			cat.getCat_descripcion(rs.getString("cat_descripcion"));
+		} catch (SQLException e) {
+			throw new DAOException("Error leyendo campos del ResultSet para Categoria", e);
+		}
 		return cat;
 	
 		
