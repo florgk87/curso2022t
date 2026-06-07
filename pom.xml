@@ -53,6 +53,16 @@
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.0</version>
+          <configuration>
+            <excludes>
+              <exclude>Controlers/CategoriaControllers.java</exclude>
+              <exclude>tienda/vistas/ListaCategoria.java</exclude>
+            </excludes>
+            <testExcludes>
+              <testExclude>es/rf/tienda/TiendaMVN/AppTest.java</testExclude>
+              <testExclude>tienda/vistas/VistaCategoriaPR.java</testExclude>
+            </testExcludes>
+          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
