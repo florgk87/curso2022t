@@ -1,7 +1,5 @@
 package es.rf.tienda.interfaces.daos;
 
-import static es.rf.tienda.interfaces.daos.CategoriaDAO.*;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -9,7 +7,6 @@ import java.util.List;
 
 import conexion.OracleJDBC;
 import es.rf.tienda.dominio.Categoria;
-import es.rf.tienda.dominio.Modelo;
 import es.rf.tienda.exception.DAOException;
 import es.rf.tienda.exception.DomainException;
 import es.rf.tienda.util.Rutinas;
@@ -23,20 +20,18 @@ public class CategoriaDAO {
 	private static final String INSERT = "INSERT INTO Categoria VALUES ";
 	private static final String DELETE = "DELETE FROM Categoria ";
 	
-	OracleJDBC odbc = new OracleJDBC();
+	private OracleJDBC odbc = OracleJDBC.getInstance();
 
 	
-	public List<Categoria>  leerTodos(Categoria cat) throws Exception {
+	public List<Categoria> leerTodos() throws Exception {
 		String sql = SELECT;
 		return montarLista(sql);
-		
 	}
 	
 	public List<Categoria> leerRegistros(Categoria cat) throws Exception {
-		String where = obtenerWhere(null);
+		String where = obtenerWhere(cat);
 		String sql = SELECT + where;
 		return montarLista(sql);
-		
 	}
 	
 
@@ -44,85 +39,81 @@ public class CategoriaDAO {
 		String salida = "";
 		
 		int clave = odbc.consigueClave("Categoria", "id_Categoria");
-		salida = Rutinas.addCampo(salida, "", ((es.rf.tienda.dominio.Categoria) cat).getId_categoria(), ",");
-		salida = Rutinas.addCampo(salida, "", ((es.rf.tienda.dominio.Categoria) cat).getCat_nombre(salida), ",");
-		salida = Rutinas.addCampo(salida, "", ((es.rf.tienda.dominio.Categoria) cat).getCat_descripcion(), ",");
+		salida = Rutinas.addCampo(salida, "", cat.getId_categoria(), ",");
+		salida = Rutinas.addCampo(salida, "", cat.getCat_nombre(), ",");
+		salida = Rutinas.addCampo(salida, "", cat.getCat_descripcion(), ",");
 		String sql = INSERT + "(" + salida + ")";
 		System.out.println(sql);
 		int ret = odbc.ejecutar(sql);
-		if (ret==0)
-			throw new DAOException();
+		if (ret == 0)
+			throw new DAOException("Error al guardar Categoria");
 		return true;
 	}
 	
-/**
- * Recibe un objeto Categoria y devuelve
- * @param cat
- * @return
- * @throws Exception
- 
+	/**
+	 * Recibe un objeto Categoria y devuelve el registro correspondiente
+	 * @param cat Categoria con los criterios de busqueda
+	 * @return Categoria encontrada
+	 * @throws Exception si ocurre un error de acceso a datos
+	 */
 	public Categoria leer(Categoria cat) throws Exception {
-		String where = obtenerWhere(null);
+		String where = obtenerWhere(cat);
 		String sql = SELECT + where;
 		ResultSet rs = OracleJDBC.ejecutarQuery(sql);
 		try {
 			rs.next();
 			if (rs.isLast()) {
-				return montarLista(rs);
-			} else
-				throw new DAOException();
-			
+				return montarRegistro(rs);
+			} else {
+				throw new DAOException("Se esperaba un unico registro");
+			}
 		} catch (SQLException e) {
-			throw new DAOException();
+			throw new DAOException("Error en leer: " + e.getMessage());
 		}
-		
-	
 	}
-*/
 
-
-	
 
 	public boolean actualizar(Categoria cat) throws Exception {
-		String where = " WHERE ID_CATEGORIA = " + ((es.rf.tienda.dominio.Categoria) cat).getId_categoria();
-		int tmp = ((es.rf.tienda.dominio.Categoria) cat).getId_categoria();
-		((es.rf.tienda.dominio.Categoria) cat).setId_categoria(0);
-		String update = "" ;
-		obtenerUpdate(cat, update);
+		String where = " WHERE ID_CATEGORIA = " + cat.getId_categoria();
+		int tmp = cat.getId_categoria();
+		cat.setId_categoria(0);
+		String update = obtenerUpdate(cat, ",");
+		cat.setId_categoria(tmp);
 		String sql = UPDATE + update + where;
-		return odbc.ejecutar(sql) >1;
+		return odbc.ejecutar(sql) > 0;
 	}	
 	
 	
 	
 	private String obtenerWhere(Categoria cat) {
-		
+		if (cat == null) {
+			return "";
+		}
 		String salida = obtenerLista(cat, "AND");
-		//String salida = "id_categoria = 1 ";
-		if (salida.length() >0 )
+		if (salida.length() > 0)
 			salida = "WHERE " + salida;
 		return salida;
 	}
 	
 	private String obtenerUpdate(Categoria cat, String separador) {
-		return obtenerLista(cat, ",");
+		return obtenerLista(cat, separador);
 	}
 	
 
 	
 	private String obtenerLista(Categoria cat, String separador) {
 		String salida = "";
-		salida = Rutinas.addCampo(salida, "id_categoria", ((es.rf.tienda.dominio.Categoria) cat).getId_categoria(), separador);
-		salida = Rutinas.addCampo(salida, "cat_nombre", ((es.rf.tienda.dominio.Categoria) cat).getCat_nombre(separador), separador);
-		salida = Rutinas.addCampo(salida, "cat_descripcion", ((es.rf.tienda.dominio.Categoria) cat).getCat_descripcion(), separador);
+		salida = Rutinas.addCampo(salida, "id_categoria", cat.getId_categoria(), separador);
+		salida = Rutinas.addCampo(salida, "cat_nombre", cat.getCat_nombre(), separador);
+		salida = Rutinas.addCampo(salida, "cat_descripcion", cat.getCat_descripcion(), separador);
 		
 		return salida;
 	}
 	
-	public boolean borrarRegistro(Categoria cat) throws Exception{
+	public boolean borrarRegistro(Categoria cat) throws Exception {
 		String where = obtenerWhere(cat);
-		String sql = DELETE + ((es.rf.tienda.dominio.Categoria) cat).getTabla() + where;
-		return odbc.ejecutar(sql) >0;
+		String sql = DELETE + where;
+		return odbc.ejecutar(sql) > 0;
 	}
 
 	
@@ -136,34 +127,28 @@ public class CategoriaDAO {
 				lista.add(montarRegistro(rs));
 			}
 		} catch (SQLException e) {
-			throw new DAOException();
+			throw new DAOException("Error al montar lista: " + e.getMessage());
 		}
 		return lista;
-		
 	}
 	
 
 	/**
-	 * 
-	 * @param rs
-	 * @return
-	 * @throws SQLException
+	 * Monta un objeto Categoria a partir de un ResultSet
+	 * @param rs ResultSet posicionado en el registro a montar
+	 * @return Categoria con los datos del registro
+	 * @throws SQLException si ocurre un error al acceder al ResultSet
 	 */
-	
 	private Categoria montarRegistro(ResultSet rs) throws SQLException {
-		// TODO Auto-generated method stub
 		Categoria cat = new Categoria();
 		cat.setId_categoria(rs.getInt("id_categoria"));
-		cat.getCat_nombre(rs.getString("cat_nombre"));
-		cat.getCat_descripcion(rs.getString("cat_descripcion"));
+		try {
+			cat.setCat_nombre(rs.getString("cat_nombre"));
+		} catch (DomainException e) {
+			System.out.println("Advertencia: nombre de categoria invalido en BD - " + e.getMessage());
+		}
+		cat.setCat_descripcion(rs.getString("cat_descripcion"));
 		return cat;
-	
-		
 	}
 
-
-
-
-	
-	
 }

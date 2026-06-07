@@ -18,8 +18,6 @@ public class Categoria {
 	private String cat_nombre;			//nombre de la categoria
 	
 	private String cat_descripcion;		//descripcion de la categoria
-
-	public double getCat_nombre;
 	
 	
 	public static final int CAT_NOMBRE_LONG_MAX = 50;
@@ -32,8 +30,6 @@ public class Categoria {
 	public boolean isValid(){	
 		return !Validator.isVacio(cat_nombre) &&
 				id_categoria > 0;
-			
-		
 	}
 	
 	/**
@@ -54,31 +50,28 @@ public class Categoria {
 	
 	/**
 	 * Getter para el nombre de categoria
-	 * @param string 
 	 * @return cadena con el nombre de la categoria
 	 */
-	public String getCat_nombre(String string) {
+	public String getCat_nombre() {
 		return cat_nombre;
 	}
 	
 	/**
 	 * Setter para el nombre de categoria
-	 * 
+	 * @param cat_nombre nombre de la categoria
+	 * @throws DomainException si el nombre no es alfanumerico o no cumple la longitud requerida
 	 */
 	public void setCat_nombre(String cat_nombre) throws DomainException {
-	//	if (Validator.isAlfanumeric(cat_nombre, CAT_NOMBRE_LONG_MIN, CAT_NOMBRE_LONG_MAX))
-	
-		if (Validator.isAlfanumeric(cat_nombre))
-				this.cat_nombre = cat_nombre;
-			else	
-				throw new DomainException(ErrorMessages.mensajes(ErrorMessages.PROERR_004, 
-						new String[] { "Nombre Categoría", "Alfanumérico"  }));
-								
-	//	else
+		if (cat_nombre == null || cat_nombre.length() < CAT_NOMBRE_LONG_MIN 
+				|| cat_nombre.length() > CAT_NOMBRE_LONG_MAX) {
 			throw new DomainException(ErrorMessages.mensajes(ErrorMessages.PROERR_003, 
-				new String[] { "Nombre Categoría", "" + CAT_NOMBRE_LONG_MIN, "" + CAT_NOMBRE_LONG_MAX  }));
-	
-
+				new String[] { "Nombre Categoría", "" + CAT_NOMBRE_LONG_MIN, "" + CAT_NOMBRE_LONG_MAX }));
+		}
+		if (!Validator.isAlfanumeric(cat_nombre)) {
+			throw new DomainException(ErrorMessages.mensajes(ErrorMessages.PROERR_004, 
+					new String[] { "Nombre Categoría", "Alfanumérico" }));
+		}
+		this.cat_nombre = cat_nombre;
 	}
 	
 	/**
@@ -142,15 +135,7 @@ public class Categoria {
 
 
 	public String getTabla() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Categoria";
 	}
 
-
-	public void getCat_descripcion(String string) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	
 }

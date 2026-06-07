@@ -1,10 +1,7 @@
 package tienda.vistas;
 
-import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.GridLayout;
 
-import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,141 +13,77 @@ import es.rf.tienda.dominio.Categoria;
 
 public class VistaCategoria {
 
-	Categoria objet;
+	private Categoria objet;
 	
-	JFrame frame;
-	JPanel panel;
-	static JLabel id_label;
-	static JLabel nombre_label;
-	static JLabel descripcion_label;
+	private JFrame frame;
+	private JPanel panel;
+	private JLabel id_label;
+	private JLabel nombre_label;
+	private JLabel descripcion_label;
 	
-	static JTextField id_text;
-	static JTextField nombre_text;
-	static JTextField descripcion_text;
+	private JTextField id_text;
+	private JTextField nombre_text;
+	private JTextField descripcion_text;
 	
-	static JButton aceptar_button;
-	static JButton cancelar_button;
-
-//prueba modificacion git y otro cambio mas
+	private JButton aceptar_button;
+	private JButton cancelar_button;
 	
 	
 	public VistaCategoria() {
-		JFrame vista = new JFrame();
-		vista.setTitle("Gestion de Categorias");
-		vista.setSize(400,600);
-		vista.setLocationRelativeTo(null);
-		
-//		JPanel panel = new JPanel();
-	
-
-		
-	}
-		
-	public static void main(String[] args) {    
-		vista(null);
-		
-	}
-
-		//JPanel panel = new JPanel();
-		
-		
-		
-	public static void vista(String title) {
-		JFrame frame = new JFrame(title);
-		frame.getContentPane().setLayout(new BorderLayout());
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
-		frame.setSize(500,120);
+		frame = new JFrame();
+		frame.setTitle("Gestion de Categorias");
+		frame.setSize(400, 600);
 		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		Container panel = frame.getContentPane();
+		Container contentPanel = frame.getContentPane();
+		SpringLayout layout = new SpringLayout();
+		contentPanel.setLayout(layout);
 		
 		id_label = new JLabel("Id. ");
 		nombre_label = new JLabel("nombre. ");
 		descripcion_label = new JLabel("descripcion. ");
 		
-		id_text = new JTextField();
-		nombre_text = new JTextField();
-		descripcion_text = new JTextField();
+		id_text = new JTextField(15);
+		nombre_text = new JTextField(15);
+		descripcion_text = new JTextField(15);
 		
 		aceptar_button = new JButton("Aceptar");
 		cancelar_button = new JButton("Cancelar");
 		
-/*	
-		//Layout
-		GroupLayout layout = new GroupLayout(frame.getAccessibleContext());
-		layout.setAutoCreateGaps(true);
-		layout.setAutoCreateContainerGaps(true);
+		contentPanel.add(id_label);
+		contentPanel.add(id_text);
+		contentPanel.add(nombre_label);
+		contentPanel.add(nombre_text);
+		contentPanel.add(descripcion_label);
+		contentPanel.add(descripcion_text);
+		contentPanel.add(aceptar_button);
+		contentPanel.add(cancelar_button);
 		
-		layout.setHorizontalGroup(layout.createSequentialGroup()
-				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(id_label)
-						.addComponent(nombre_label)
-						.addComponent(descripcion_label)
-				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(id_text)
-						.addComponent(nombre_text)
-						.addComponent(descripcion_text))));
+		layout.putConstraint(SpringLayout.WEST, id_label, 30, SpringLayout.WEST, contentPanel);
+		layout.putConstraint(SpringLayout.WEST, nombre_label, 30, SpringLayout.WEST, contentPanel);
+		layout.putConstraint(SpringLayout.WEST, descripcion_label, 30, SpringLayout.WEST, contentPanel);
+		layout.putConstraint(SpringLayout.WEST, aceptar_button, 60, SpringLayout.WEST, contentPanel);
+		layout.putConstraint(SpringLayout.WEST, id_text, 120, SpringLayout.WEST, contentPanel);
+		layout.putConstraint(SpringLayout.WEST, nombre_text, 120, SpringLayout.WEST, contentPanel);
+		layout.putConstraint(SpringLayout.WEST, descripcion_text, 120, SpringLayout.WEST, contentPanel);
+		layout.putConstraint(SpringLayout.WEST, cancelar_button, 150, SpringLayout.WEST, contentPanel);
 		
-		//layout.setVerticalGroup(null);
-*/
+		layout.putConstraint(SpringLayout.NORTH, id_label, 30, SpringLayout.NORTH, contentPanel);
+		layout.putConstraint(SpringLayout.NORTH, nombre_label, 60, SpringLayout.NORTH, contentPanel);
+		layout.putConstraint(SpringLayout.NORTH, descripcion_label, 90, SpringLayout.NORTH, contentPanel);
+		layout.putConstraint(SpringLayout.NORTH, aceptar_button, 130, SpringLayout.NORTH, contentPanel);
 		
-		//GridLayout layout = new GridLayout(4,2);
-		SpringLayout layout = new SpringLayout();
-		panel.setLayout(layout);
+		layout.putConstraint(SpringLayout.SOUTH, id_text, 0, SpringLayout.SOUTH, id_label);
+		layout.putConstraint(SpringLayout.SOUTH, nombre_text, 0, SpringLayout.SOUTH, nombre_label);
+		layout.putConstraint(SpringLayout.SOUTH, descripcion_text, 0, SpringLayout.SOUTH, descripcion_label);
+		layout.putConstraint(SpringLayout.SOUTH, cancelar_button, 0, SpringLayout.SOUTH, aceptar_button);
 		
-		panel.add(id_label);
-		panel.add(nombre_label);
-		panel.add(descripcion_label);
-		panel.add(id_text);
-		panel.add(nombre_text);
-		panel.add(descripcion_text);
-		panel.add(cancelar_button);
-		panel.add(aceptar_button);	
-		panel.setSize(300,200);
-	
-		frame.getContentPane().setLayout(layout);
 		frame.setVisible(true);
+	}
 		
-			
-/*
- * 		layout.addLayoutComponent(title, aceptar_button);
-		layout.addLayoutComponent(title, cancelar_button);
-		layout.addLayoutComponent(title, id_text);
-		layout.addLayoutComponent(title, nombre_text);
-		layout.addLayoutComponent(title, descripcion_text);
-		layout.addLayoutComponent(title, id_label);
-		layout.addLayoutComponent(title, nombre_label);
-		layout.addLayoutComponent(title, descripcion_label);
- */
-
-		
-		
-
-		
-			
-		
+	public static void main(String[] args) {    
+		new VistaCategoria();
 	}
 
-
-		public VistaCategoria(Categoria objet, JFrame frame, JPanel panel, JLabel id_label, JLabel nombre_label,
-				JLabel descripcion_label, JTextField id_text, JTextField nombre_text, JTextField descripcion_text,
-				JButton aceptar_button, JButton cancelar_button) {
-			super();
-			this.objet = objet;
-			this.frame = frame;
-			this.panel = panel;
-			this.id_label = id_label;
-			this.nombre_label = nombre_label;
-			this.descripcion_label = descripcion_label;
-			this.id_text = id_text;
-			this.nombre_text = nombre_text;
-			this.descripcion_text = descripcion_text;
-			this.aceptar_button = aceptar_button;
-			this.cancelar_button = cancelar_button;
-		}
-	
-	
-	
-	
 }

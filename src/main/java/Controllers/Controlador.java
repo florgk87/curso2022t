@@ -1,4 +1,4 @@
-package Controlers;
+package Controllers;
 
 import java.util.List;
 import java.util.Map;
@@ -12,11 +12,6 @@ public interface Controlador<T> {
 	public boolean actualizar(T obj);
 	public boolean borrar(T obj);
 	
-	//vista invocar al controlador con LeeTodos
-	//Pantalla de captura con la orden Grabar
-	
 	public Map<String,String> obtenSelect();
-	
-	
-	
+
 }
