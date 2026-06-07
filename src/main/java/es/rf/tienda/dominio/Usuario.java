@@ -34,6 +34,7 @@ public class Usuario {
 	public String getUser_pass() {
 		return user_pass;
 	}
+	// TODO: Hash passwords before storing (e.g. bcrypt). Never store plaintext passwords.
 	public void setUser_pass(String user_pass) {
 		this.user_pass = user_pass;
 	}
