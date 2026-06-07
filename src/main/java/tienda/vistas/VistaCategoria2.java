@@ -17,13 +17,7 @@ public class VistaCategoria2 {
 	Categoria object;
 	
 	VistaCategoria2() {
-		JFrame vista = new JFrame();
-		vista.setTitle("Gestion Categorías");
-		vista.setSize(400,600);
-		vista.setLocationRelativeTo(null);
-		
-//		JPanel p = new JPanel(new SpringLayout());
-		
+		FormHelper.createCategoriaFrame("Gestion Categorías", 400, 600);
 	}
 	
 	public static void main(String[] args) {    
@@ -31,18 +25,11 @@ public class VistaCategoria2 {
 		
 	}
 	public static void view (){
-	    JFrame vista = new JFrame();
-		vista.setTitle("Gestion Categorías");
-		vista.setSize(350,250);
+		JFrame vista = FormHelper.createCategoriaFrame("Gestion Categorías", 350, 250);
 		vista.setResizable(false);
-		vista.setLocationRelativeTo(null);
-		vista.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		Container panel = vista.getContentPane();
 		SpringLayout layout = new SpringLayout();
-		
-		//establece el layout
-		panel.setLayout(layout);
 		
 		JLabel jl1 = new JLabel("Categoria:	");
 		JLabel jl2 = new JLabel("Nombre: ");
@@ -55,14 +42,8 @@ public class VistaCategoria2 {
 		JButton aceptar = new JButton("Aceptar");
 		JButton cancelar = new JButton("Cancelar");
 		
-		panel.add(jl1);
-		panel.add(jl2);
-		panel.add(jl3);
-		panel.add(jt1);
-		panel.add(jt2);
-		panel.add(jt3);
-		panel.add(aceptar);
-		panel.add(cancelar);
+		FormHelper.addCategoriaFormComponents(panel, layout,
+				jl1, jl2, jl3, jt1, jt2, jt3, aceptar, cancelar);
 		
 		layout.putConstraint(SpringLayout.WEST, jl1, 30, SpringLayout.WEST, panel);
 		layout.putConstraint(SpringLayout.WEST, jl2, 30, SpringLayout.WEST, panel);

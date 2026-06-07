@@ -1,9 +1,7 @@
 package es.rf.tienda.util;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
@@ -77,23 +75,14 @@ public class Validator {
 	 * 
 	 * **************************************************************************************/
 	public static boolean isAlfanumeric(String texto){
-		if (texto == null) {
-			return false;
-		}
-		Pattern pattern = Pattern.compile(ALFANUMERIC_PATTERN);
-		Matcher matcher = pattern.matcher(texto);
-				return matcher.matches();
+		return matchesPattern(texto, ALFANUMERIC_PATTERN);
 	}
 	
 	public static boolean isCodigoProducto(String texto){
-		if (!isVacio(texto)) {
-			if (texto.length()== ID_PRODUCTO_LONGITUD) {
-				Pattern pattern = Pattern.compile(ID_PRODUCTO_PATTERN);
-				Matcher matcher = pattern.matcher(texto);
-						return matcher.matches();
-			}
+		if (!isVacio(texto) && texto.length() == ID_PRODUCTO_LONGITUD) {
+			return matchesPattern(texto, ID_PRODUCTO_PATTERN);
 		}
-				return false;
+		return false;
 	}
 	
 	public static boolean isVacio( String prueba ){
@@ -139,13 +128,7 @@ public class Validator {
 	 * 
 	 * **************************************************************************************/
 	public static boolean isEmailValido(String email){
-		if (email ==null) {
-		return false;
-		}
-		
-		Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-		Matcher matcher = pattern.matcher(email);
-		return matcher.matches();	
+		return matchesPattern(email, EMAIL_PATTERN);
 	}
 
 	/* ***************************************************************************************
@@ -357,17 +340,11 @@ public class Validator {
 	
 
 	public static boolean esFechaValida(String fecha){
-// Defini sdf arriba
-//		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Calendar calendar = Calendar.getInstance();
-		try {
-			calendar.setTime(sdf.parse(fecha));
-		} catch (ParseException e) {
+		Calendar calendar = Rutinas.convierteACalendar(fecha);
+		if (calendar == null) {
 			return false;
 		}
-	
-		return (fecha.compareTo(sdf.format(calendar.getTime()))) ==0;
-		
+		return (fecha.compareTo(sdf.format(calendar.getTime()))) == 0;
 	}
 	
 	/**
@@ -377,12 +354,13 @@ public class Validator {
 	 * @return true si cumple con las especificaciones
 	 */
 	public static boolean esPasswordValida(String password){
-		if (password == null) {
+		return matchesPattern(password, PASSWORD_PATTERN);
+	}
+
+	private static boolean matchesPattern(String text, String regex) {
+		if (text == null) {
 			return false;
 		}
-		Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
-		Matcher matcher = pattern.matcher(password);
-		return matcher.matches();
-
+		return Pattern.compile(regex).matcher(text).matches();
 	}
 }
