@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import es.rf.tienda.exception.DAOException;
+
 public class OracleJDBC{
 
 	private static OracleJDBC instancia = null;
@@ -15,19 +17,12 @@ public class OracleJDBC{
 	private final String URL = "jdbc:oracle:thin:@localhost:1521:xe";
 	private final String USUARIO = "alumno";
 	private final String PASSWORD = "Curso2022";
-	//private final String SQL_USE = "USE";
-	//private final String SQL_CREATE = "CREATE DATABASE";
-
-	
-	
 
 	public static void main(String[] args) {
 		conn = null;
 	}
 
-
-
-public static OracleJDBC getInstance() {
+public static OracleJDBC getInstance() throws DAOException {
 	if (instancia ==null) {
 		instancia = new OracleJDBC();
 		
@@ -35,36 +30,30 @@ public static OracleJDBC getInstance() {
 		return instancia;
 }
 
-public OracleJDBC() {
+public OracleJDBC() throws DAOException {
 	conexion();
 }
 
-private void conexion() {
+private void conexion() throws DAOException {
 	System.out.println("------Prueba de conexion a BBDD -------");
 	
 	try {
-	Class.forName(JDBC_DRIVER);
+		Class.forName(JDBC_DRIVER);
 	} catch (ClassNotFoundException e) {
-		System.out.println("Donde esta tu Driver Oracle");
-		e.printStackTrace();
-		return;
+		throw new DAOException("Driver Oracle JDBC no encontrado", e);
 	}
 			
 	System.out.println("Driver oracle Registrado!");
-    conn = null;
+	conn = null;
 	try {
 	     conn = DriverManager.getConnection(URL , USUARIO , PASSWORD);
 		
 	} catch (SQLException e) {
-		System.out.println("Falló la conexion");
-		e.printStackTrace();
-		return;
+		throw new DAOException("No se pudo establecer conexion con la base de datos", e);
 	}
-	
-
 }
 
-public int ejecutar(String sql) throws Exception {
+public int ejecutar(String sql) throws DAOException {
 	
 	System.out.println("Ejecutar: " + sql);
 	 
@@ -75,27 +64,27 @@ public int ejecutar(String sql) throws Exception {
 		stm = conn.createStatement();
 		retorno = stm.executeUpdate(sql);
 		
-	}catch (SQLException e) {
-		e.printStackTrace();
-		throw (new Exception("Error en " + sql));
+	} catch (SQLException e) {
+		throw new DAOException("Error ejecutando SQL: " + sql, e);
 		
 	} finally {
 		closeStatement(stm);
 	}
 	
-	
-	
 	return retorno;
 }
 
-private static void closeStatement(Statement stm) throws SQLException {
-	conn.close();
-	
+private static void closeStatement(Statement stm) {
+	if (stm != null) {
+		try {
+			stm.close();
+		} catch (SQLException e) {
+			System.err.println("Error cerrando Statement: " + e.getMessage());
+		}
+	}
 }
 
-
-
-public static ResultSet ejecutarQuery(String sql) throws Exception {
+public static ResultSet ejecutarQuery(String sql) throws DAOException {
 	
 	System.out.println("Ejecutar Query: " + sql);
 	Statement stm = null;
@@ -105,54 +94,38 @@ public static ResultSet ejecutarQuery(String sql) throws Exception {
 		stm = conn.createStatement();
 		retorno = stm.executeQuery(sql);
 		
-	}catch (SQLException e) {
-		e.printStackTrace();
-		throw (new Exception("Error en " + sql));
-		
-	} finally {
+	} catch (SQLException e) {
 		closeStatement(stm);
+		throw new DAOException("Error ejecutando query: " + sql, e);
 	}
 	
 	return retorno;
 }
 
-
-
-public int consigueClave(String tabla, String campo) throws Exception {
+public int consigueClave(String tabla, String campo) throws DAOException {
 	String sql = "SELECT MAX(" + campo + ") FROM " + tabla;
 	ResultSet rs = ejecutarQuery(sql);
 	
 	try {
-		if (rs.next())
-			System.out.println("Tiene datos");
-		else
+		if (rs.next()) {
+			return rs.getInt(1) + 1;
+		} else {
 			return 1;
-		return rs.getInt(0) + 1 ; 
-	}catch (SQLException e) {
-		e.printStackTrace();
-		throw new Exception("Error buscando PK : " + sql);
+		}
+	} catch (SQLException e) {
+		throw new DAOException("Error buscando PK: " + sql, e);
 	}
-	
 }
 
-
-public void closeConnection() throws Exception {
+public void closeConnection() throws DAOException {
 	try {
 		if (conn != null && !conn.isClosed()) {
 			conn.close();
 		}
-	} catch (Exception e) {
-		System.out.println("No se ha podido cerrar la conexión a la BD");
-		throw new Exception("Error al cerrar conexión a BD");
+	} catch (SQLException e) {
+		throw new DAOException("Error al cerrar conexion a BD", e);
 	} finally {
 		conn = null;
 	}
 }
 }
-
-
-
-
-
-
-

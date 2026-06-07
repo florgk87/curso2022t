@@ -49,7 +49,7 @@ public class BOCategoria extends CategoriaDAO {
 			salida.setCat_descripcion(rs.getString("Cat_descripcion"));
 			
 		}catch (SQLException e) {
-			throw new DAOException( );
+			throw new DAOException("Error leyendo campos del ResultSet para Categoria", e);
 		}
 		return salida;
 	
