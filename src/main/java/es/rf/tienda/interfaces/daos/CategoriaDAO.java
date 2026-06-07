@@ -9,7 +9,6 @@ import java.util.List;
 
 import conexion.OracleJDBC;
 import es.rf.tienda.dominio.Categoria;
-import es.rf.tienda.dominio.Modelo;
 import es.rf.tienda.exception.DAOException;
 import es.rf.tienda.exception.DomainException;
 import es.rf.tienda.util.Rutinas;
@@ -114,7 +113,7 @@ public class CategoriaDAO {
 	
 
 	
-	private String obtenerLista(Categoria cat, String separador) {
+	protected String obtenerLista(Categoria cat, String separador) {
 		String salida = "";
 		salida = Rutinas.addCampo(salida, "id_categoria", ((es.rf.tienda.dominio.Categoria) cat).getId_categoria(), separador);
 		salida = Rutinas.addCampo(salida, "cat_nombre", ((es.rf.tienda.dominio.Categoria) cat).getCat_nombre(separador), separador);
@@ -154,18 +153,16 @@ public class CategoriaDAO {
 	 * @throws DAOException
 	 */
 	
-	private Categoria montarRegistro(ResultSet rs) throws DAOException {
+	protected Categoria montarRegistro(ResultSet rs) throws DAOException, DomainException {
 		Categoria cat = new Categoria();
 		try {
 			cat.setId_categoria(rs.getInt("id_categoria"));
-			cat.getCat_nombre(rs.getString("cat_nombre"));
-			cat.getCat_descripcion(rs.getString("cat_descripcion"));
+			cat.setCat_nombre(rs.getString("cat_nombre"));
+			cat.setCat_descripcion(rs.getString("cat_descripcion"));
 		} catch (SQLException e) {
 			throw new DAOException("Error leyendo campos del ResultSet para Categoria", e);
 		}
 		return cat;
-	
-		
 	}
 
 
